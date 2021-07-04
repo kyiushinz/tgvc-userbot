@@ -97,9 +97,9 @@ class MusicPlayer(object):
             pl = f"{emoji.NO_ENTRY} empty playlist"
         else:
             if len(playlist) == 1:
-                pl = f"{emoji.REPEAT_SINGLE_BUTTON} **Playlist**:\n"
+                pl = f"{emoji.REPEAT_SINGLE_BUTTON} **Daftar Putar Music**:\n"
             else:
-                pl = f"{emoji.PLAY_BUTTON} **Playlist**:\n"
+                pl = f"{emoji.PLAY_BUTTON} **Daftar Putar Music**:\n"
             pl += "\n".join([
                 f"**{i}**. **[{x.audio.title}]({x.link})**"
                 for i, x in enumerate(playlist)
@@ -121,13 +121,13 @@ async def network_status_changed_handler(gc: GroupCall, is_connected: bool):
         mp.chat_id = int("-100" + str(gc.full_chat.id))
         await mp.group_call.client.send_message(
             "me",
-            f"{emoji.CHECK_MARK_BUTTON} joined the voice chat"
+            f"{emoji.CHECK_MARK_BUTTON} @Randovlsky sudah bergabung di Voice Chat."
         )
     else:
         mp.chat_id = None
         await mp.group_call.client.send_message(
             "me",
-            f"{emoji.CROSS_MARK_BUTTON} left the voice chat"
+            f"{emoji.CROSS_MARK_BUTTON} @Randovlsky keluar Voice Chat."
         )
 
 
@@ -150,7 +150,7 @@ async def join_voice_chat(client, m: Message):
         group_call = mp.group_call
         group_call.client = client
         if group_call.is_connected:
-            text = f"{emoji.ROBOT} already joined a voice chat"
+            text = f"{emoji.ROBOT} Sudah bergabung.."
         else:
             await group_call.start(channel, join_as=join_as,
                                    invite_hash=invite_hash)
@@ -169,7 +169,7 @@ async def list_voice_chat(client, m: Message):
         chat_id = int("-100" + str(group_call.full_chat.id))
         chat = await client.get_chat(chat_id)
         await m.reply_text(
-            f"{emoji.MUSICAL_NOTES} **currently in the voice chat**:\n"
+            f"{emoji.MUSICAL_NOTES} **Daftar Lagu di Voice Chat..**:\n"
             f"- **{chat.title}**",
             quote=True
         )
@@ -225,14 +225,14 @@ async def play_track(client, m: Message):
     # check already added
     if playlist and playlist[-1].audio.file_unique_id \
             == m_audio.audio.file_unique_id:
-        reply = await m.reply_text(f"{emoji.ROBOT} already added", quote=True)
+        reply = await m.reply_text(f"{emoji.ROBOT} Music itu sudah di Tambahkan.", quote=True)
         await _delay_delete_messages((reply, m), DELETE_DELAY)
         return
     # add to playlist
     playlist.append(m_audio)
     if len(playlist) == 1:
         m_status = await m.reply_text(
-            f"{emoji.INBOX_TRAY} downloading and transcoding...",
+            f"{emoji.INBOX_TRAY} LAGI NGOCOK NUNGGU MUNCRAT...",
             quote=True
         )
         await download_audio(playlist[0])
@@ -319,7 +319,7 @@ async def stop_playing(_, m: Message):
     group_call = mp.group_call
     group_call.stop_playout()
     reply = await m.reply_text(
-        f"{emoji.STOP_BUTTON} stopped playing",
+        f"{emoji.STOP_BUTTON} Berhenti memainkan Music",
         quote=True
     )
     await mp.update_start_time(reset=True)
@@ -348,7 +348,7 @@ async def restart_playing(_, m: Message):
 async def pause_playing(_, m: Message):
     mp.group_call.pause_playout()
     await mp.update_start_time(reset=True)
-    reply = await m.reply_text(f"{emoji.PLAY_OR_PAUSE_BUTTON} paused",
+    reply = await m.reply_text(f"{emoji.PLAY_OR_PAUSE_BUTTON} Pause Music..",
                                quote=True)
     mp.msg['pause'] = reply
     await m.delete()
@@ -358,7 +358,7 @@ async def pause_playing(_, m: Message):
                    & filters.regex("^!resume"))
 async def resume_playing(_, m: Message):
     mp.group_call.resume_playout()
-    reply = await m.reply_text(f"{emoji.PLAY_OR_PAUSE_BUTTON} resumed",
+    reply = await m.reply_text(f"{emoji.PLAY_OR_PAUSE_BUTTON} Resume Music.",
                                quote=True)
     if mp.msg.get('pause') is not None:
         await mp.msg['pause'].delete()
@@ -393,7 +393,7 @@ async def clean_raw_pcm(client, m: Message):
 async def mute(_, m: Message):
     group_call = mp.group_call
     group_call.set_is_mute(True)
-    reply = await m.reply_text(f"{emoji.MUTED_SPEAKER} muted", quote=True)
+    reply = await m.reply_text(f"{emoji.MUTED_SPEAKER} ANJING GUA CAPE MAU NGOCOK DULU.", quote=True)
     await _delay_delete_messages((reply, m), DELETE_DELAY)
 
 
@@ -403,7 +403,7 @@ async def unmute(_, m: Message):
     group_call = mp.group_call
     group_call.set_is_mute(False)
     reply = await m.reply_text(
-        f"{emoji.SPEAKER_MEDIUM_VOLUME} unmuted",
+        f"{emoji.SPEAKER_MEDIUM_VOLUME} OKEEE GUA UDAH COLI NIH LANJUT KAN",
         quote=True
     )
     await _delay_delete_messages((reply, m), DELETE_DELAY)
